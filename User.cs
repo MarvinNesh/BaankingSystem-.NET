@@ -6,19 +6,20 @@ namespace BankingSystem
     {
         public string Name { get; private set; }
         public string Email { get; private set; }
-        public string Password { get; private set; } // TODO hash this
-
+        public string Password { get; private set; } 
 
         public void SetPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password cannot be empty.");
-            Password = password; //TODO hash the password when you store
+            Password = SimpleHash(password);
         }
         private string SimpleHash(string password)
         {
             
-            return password; 
+            string salt = "bankSalt"; 
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password + salt));
+        
         }
     }
 }
