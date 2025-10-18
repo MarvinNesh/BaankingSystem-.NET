@@ -8,6 +8,12 @@ namespace BankingSystem
         public string Email { get; private set; }
         public string Password { get; private set; } 
 
+        public User(string name, string email)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Email = email ?? throw new ArgumentNullException(nameof(email));
+        }
+
         public void SetPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
