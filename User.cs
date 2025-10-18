@@ -15,5 +15,10 @@ namespace BankingSystem
                 throw new ArgumentException("Password cannot be empty.");
             Password = password; //TODO hash the password when you store
         }
+        private string SimpleHash(string password)
+        {
+            
+            return password; 
+        }
     }
 }
