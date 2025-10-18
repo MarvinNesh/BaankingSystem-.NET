@@ -39,5 +39,14 @@ namespace BankingSystem.Tests
             Assert.NotEqual("secret123", user.Password);
             Assert.Equal(expectedHash, user.Password);
         }
+
+        [Fact]
+        public void SetPassword_WithEmptyData_ThrowsArgumentException()
+        {
+            var user = new User("Nesh Marvin", "nesh@test.com");
+
+            var ex = Assert.Throws<ArgumentException>(() => user.SetPassword(""));
+            Assert.Contains("Password cannot be empty", ex.Message);
+        }
     }
 }
