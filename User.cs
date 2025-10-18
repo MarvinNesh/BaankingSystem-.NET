@@ -42,5 +42,10 @@ namespace BankingSystem
         {
             return SimpleHash(password) == Password;
         }
+
+        public static void ClearRegistry()
+        {
+            existingUsers.Clear();
+        }
     }
 }
