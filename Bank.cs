@@ -6,6 +6,7 @@ namespace BankingSystem
     public class Bank
     {
         private List<User> users = new List<User>();
+        private Dictionary<User, List<Account>> userAccounts = new Dictionary<User, List<Account>>(); // Maps users to their accounts
 
         public void RegisterUser(string name, string email, string password)
         {
@@ -13,6 +14,7 @@ namespace BankingSystem
             var user = new User(name, email);
             user.SetPassword(password);
             users.Add(user);
+            userAccounts[user] = new List<Account>(); // Initialize empty account list for new user
             Console.WriteLine($"Registered user: {name}");
         }
 
