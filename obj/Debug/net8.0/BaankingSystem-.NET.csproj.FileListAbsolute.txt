@@ -1,0 +1,15 @@
+/home/vhuhwavho/BaankingSystem-.NET/bin/Debug/net8.0/BaankingSystem-.NET
+/home/vhuhwavho/BaankingSystem-.NET/bin/Debug/net8.0/BaankingSystem-.NET.deps.json
+/home/vhuhwavho/BaankingSystem-.NET/bin/Debug/net8.0/BaankingSystem-.NET.runtimeconfig.json
+/home/vhuhwavho/BaankingSystem-.NET/bin/Debug/net8.0/BaankingSystem-.NET.dll
+/home/vhuhwavho/BaankingSystem-.NET/bin/Debug/net8.0/BaankingSystem-.NET.pdb
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.GeneratedMSBuildEditorConfig.editorconfig
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.AssemblyInfoInputs.cache
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.AssemblyInfo.cs
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.csproj.CoreCompileInputs.cache
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.sourcelink.json
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.dll
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/refint/BaankingSystem-.NET.dll
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.pdb
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/BaankingSystem-.NET.genruntimeconfig.cache
+/home/vhuhwavho/BaankingSystem-.NET/obj/Debug/net8.0/ref/BaankingSystem-.NET.dll
