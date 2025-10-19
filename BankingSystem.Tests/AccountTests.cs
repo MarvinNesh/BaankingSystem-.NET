@@ -1,6 +1,6 @@
 using Xunit;
 using BankingSystem;
-using System.IO;  
+using System.IO;
 
 namespace BankingSystem.Tests
 {
@@ -64,7 +64,17 @@ namespace BankingSystem.Tests
             account.CheckBalance();
 
             var output = stringWriter.ToString();
-            Assert.Contains("Balance for Nesh Marvin: $100.00", output);
+            Assert.Contains("Balance for Nesh Marvin: R100.00", output);
+        }
+
+        [Fact]
+        public void Constructor_SetsAccountNumberCorrectly()
+        {
+            var account = new TestAccount("Nesh Marvin", 100m);
+
+            Assert.NotNull(account.AccountNumber);
+            Assert.NotEmpty(account.AccountNumber);
+            Assert.Contains("-", account.AccountNumber);
         }
     }
 }
