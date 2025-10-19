@@ -11,7 +11,8 @@ public class Program
     public static void Main(string[] args)
     {
         bank = new Bank();
-        Console.WriteLine("Welcome to the MarvinBank");
+
+        Console.WriteLine("Welcome to the Marvin Bank");
 
         while (true)
         {
@@ -135,7 +136,7 @@ public class Program
     {
         if (currentUser == null) return;
 
-        Console.WriteLine("Choose account type:\n1. Savings\n2. Checking\n3. Credit");
+        Console.WriteLine("Choose account type:\n1. Savings\n2. Checking\n3. Credit\n4. Business");
         var type = Console.ReadLine();
         Account? account = null;
 
@@ -159,6 +160,18 @@ public class Program
                     else
                     {
                         Console.WriteLine("Invalid credit limit amount.");
+                        return;
+                    }
+                    break;
+                case "4":
+                    Console.Write("Enter overdraft limit: ");
+                    if (decimal.TryParse(Console.ReadLine(), out decimal overdraftLimit))
+                    {
+                        account = new BusinessAccount(currentUser.Name, initialDeposit, overdraftLimit);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid overdraft limit amount.");
                         return;
                     }
                     break;
