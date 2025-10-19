@@ -1,5 +1,6 @@
 using Xunit;
 using BankingSystem;
+using System.IO;  
 
 namespace BankingSystem.Tests
 {
@@ -51,6 +52,19 @@ namespace BankingSystem.Tests
 
             var ex = Assert.Throws<InvalidOperationException>(() => account.Withdraw(150m));
             Assert.Contains("Insufficient funds", ex.Message);
+        }
+
+        [Fact]
+        public void CheckBalance_DisplaysCorrectBalance()
+        {
+            var account = new TestAccount("Nesh Marvin", 100m);
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+
+            account.CheckBalance();
+
+            var output = stringWriter.ToString();
+            Assert.Contains("Balance for Nesh Marvin: $100.00", output);
         }
     }
 }
