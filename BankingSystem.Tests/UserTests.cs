@@ -32,14 +32,14 @@ namespace BankingSystem.Tests
         [Fact]
         public void SetPassword_WithValidData_HashesPassword()
         {
-           User.ClearRegistry();  // Clear for isolation
-            var user = new User("Nesh Marvin", "nesh@test.com");
-            var expectedHash = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("secret123" + "bankSalt"));
+            var user = new User("Nesh Marvin", "nesh@marvin.com");
+            var password = "secret123bank";
 
-            user.SetPassword("secret123");
+            user.SetPassword(password);
 
-            Assert.NotEqual("secret123", user.Password);
-            Assert.Equal(expectedHash, user.Password);
+            Assert.NotNull(user.Password);
+            Assert.NotEqual(password, user.Password);
+            Assert.True(user.VerifyPassword(password));
         }
 
         [Fact]
