@@ -52,7 +52,7 @@ public class Program
     private static void ShowMainMenu()
     {
         Console.WriteLine($"\nWelcome, {currentUser?.Name}!");
-        Console.WriteLine("1. Open Account\n2. Deposit\n3. Withdraw\n4. Check Balance\n5. Logout");
+        Console.WriteLine("1. Open Account\n2. Perform Transaction\n3. Check All Balances\n4. Logout");
         Console.Write("Choose an option: ");
         var choice = Console.ReadLine();
 
@@ -62,15 +62,12 @@ public class Program
                 OpenAccount();
                 break;
             case "2":
-                Deposit();
+                PerformTransactions();
                 break;
             case "3":
-                Withdraw();
+                CheckAllBalances();
                 break;
             case "4":
-                CheckBalance();
-                break;
-            case "5":
                 currentUser = null;
                 Console.WriteLine("Logged out successfully.");
                 break;
@@ -91,10 +88,14 @@ public class Program
             Console.Write("Enter password: ");
             var password = Console.ReadLine();
 
-            if (name != null && email != null && password != null)
+            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
             {
                 bank?.RegisterUser(name, email, password);
                 Console.WriteLine("Registration successful!");
+            }
+            else
+            {
+                Console.WriteLine("Name, email, and password cannot be empty.");
             }
         }
         catch (Exception ex)
@@ -112,7 +113,7 @@ public class Program
             Console.Write("Enter password: ");
             var password = Console.ReadLine();
 
-            if (email != null && password != null)
+            if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
             {
                 currentUser = bank?.Login(email, password);
                 if (currentUser != null)
@@ -131,7 +132,7 @@ public class Program
     {
         if (currentUser == null) return;
 
-        Console.WriteLine("Choose account type:\n1. Savings\n2. Checking");
+        Console.WriteLine("Choose account type:\n1. Savings\n2. Checking\n3. Credit");
         var type = Console.ReadLine();
         Account? account = null;
 
@@ -145,6 +146,18 @@ public class Program
                     break;
                 case "2":
                     account = new CheckingAccount(currentUser.Name, initialDeposit);
+                    break;
+                case "3":
+                    Console.Write("Enter credit limit: ");
+                    if (decimal.TryParse(Console.ReadLine(), out decimal creditLimit))
+                    {
+                        account = new CreditAccount(currentUser.Name, creditLimit, initialDeposit);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid credit limit amount.");
+                        return;
+                    }
                     break;
                 default:
                     Console.WriteLine("Invalid account type.");
@@ -183,53 +196,96 @@ public class Program
             return accounts[0];
         }
 
-        Console.WriteLine("Select an account:");
+        Console.WriteLine("\nSelect an account:");
         for (int i = 0; i < accounts.Count; i++)
         {
-            var accountType = accounts[i] is SavingsAccount ? "Savings" : "Checking";
-            Console.WriteLine($"{i + 1}. {accountType} Account - Balance: R{accounts[i].Balance:F2}");
+            string accountTypeName = accounts[i].GetType().Name.Replace("Account", "");
+            Console.WriteLine($"{i + 1}. {accountTypeName}");
         }
 
         Console.Write("Choose an account: ");
         if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex > 0 && accountIndex <= accounts.Count)
         {
-            var selectedAccount = accounts[accountIndex - 1];
-            Console.WriteLine($"Selected Account: {selectedAccount.AccountNumber}");
-
-            string transactionPrompt = "Choose transaction: (1) Deposit (2) Withdraw (3) Check Balance";
-            if (selectedAccount is CreditAccount)
-            {
-                transactionPrompt = "Choose transaction: (1) Make Payment (2) Withdraw (3) Check Balance";
-            }
-            Console.WriteLine(transactionPrompt);
-
-            switch (Console.ReadLine())
-            {
-                case "1":
-                    Console.Write("Enter amount: ");
-                    if (decimal.TryParse(Console.ReadLine(), out decimal depositAmount))
-                    {
-                        if (selectedAccount is CreditAccount creditAccount)
-                        {
-                            creditAccount.MakePayment(depositAmount);
-                        }
-                        else
-                        {
-                            selectedAccount.Deposit(depositAmount);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid deposit amount.");
-                    }
+            return accounts[accountIndex - 1];
         }
         else
         {
-            Console.WriteLine("Invalid amount.");
+            Console.WriteLine("Invalid selection.");
+            return null;
         }
     }
 
-    private static void CheckBalance()
+    private static void PerformTransactions()
+    {
+        var selectedAccount = SelectAccount();
+        if (selectedAccount == null)
+        {
+            return;
+        }
+
+        Console.WriteLine($"Selected Account: {selectedAccount.AccountNumber}");
+        selectedAccount.CheckBalance();
+
+        string transactionPrompt = "\nChoose transaction:\n1. Deposit\n2. Withdraw";
+        if (selectedAccount is CreditAccount)
+        {
+            transactionPrompt = "\nChoose transaction:\n1. Make Payment\n2. Withdraw";
+        }
+        Console.WriteLine(transactionPrompt);
+        Console.Write("Choose an option: ");
+
+        switch (Console.ReadLine())
+        {
+            case "1":
+                Console.Write("Enter amount: ");
+                if (decimal.TryParse(Console.ReadLine(), out decimal amount))
+                {
+                    try
+                    {
+                        if (selectedAccount is CreditAccount creditAccount)
+                        {
+                            creditAccount.MakePayment(amount);
+                        }
+                        else
+                        {
+                            selectedAccount.Deposit(amount);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid amount.");
+                }
+                break;
+            case "2":
+                Console.Write("Enter amount: ");
+                if (decimal.TryParse(Console.ReadLine(), out amount))
+                {
+                    try
+                    {
+                        selectedAccount.Withdraw(amount);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid amount.");
+                }
+                break;
+            default:
+                Console.WriteLine("Invalid transaction type.");
+                break;
+        }
+    }
+
+    private static void CheckAllBalances()
     {
         var accounts = bank?.GetAccounts(currentUser);
         if (accounts != null && accounts.Any())
