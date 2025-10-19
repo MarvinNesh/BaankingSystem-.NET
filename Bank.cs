@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BankingSystem
 {
@@ -22,7 +23,7 @@ namespace BankingSystem
             return user;
         }
 
-        public void OpenAccount(User user, Account account)
+        public void OpenAccount(User user, Account newAccount)
         {
             if (user == null) return;
 
@@ -30,7 +31,15 @@ namespace BankingSystem
             {
                 _accounts[user.Email] = new List<Account>();
             }
-            _accounts[user.Email].Add(account);
+
+            var existingAccounts = _accounts[user.Email];
+            if (existingAccounts.Any(acc => acc.GetType() == newAccount.GetType()))
+            {
+                string accountTypeName = newAccount.GetType().Name.Replace("Account", "");
+                throw new InvalidOperationException($"You already have a {accountTypeName} account.");
+            }
+            
+            existingAccounts.Add(newAccount);
         }
 
         public List<Account>? GetAccounts(User? user)

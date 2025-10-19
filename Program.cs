@@ -152,8 +152,15 @@ public class Program
             }
             if (bank != null && account != null)
             {
-                bank.OpenAccount(currentUser, account);
-                Console.WriteLine("Account opened successfully!");
+                try
+                {
+                    bank.OpenAccount(currentUser, account);
+                    Console.WriteLine("Account opened successfully!");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
             }
         }
         else
