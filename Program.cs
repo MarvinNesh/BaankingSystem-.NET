@@ -9,7 +9,7 @@ public class Program
     public static void Main(string[] args)
     {
         bank = new Bank();
-        Console.WriteLine("Welcome to the Banking System!");
+        Console.WriteLine("Welcome to the MarvinBank");
 
         while (true)
         {
