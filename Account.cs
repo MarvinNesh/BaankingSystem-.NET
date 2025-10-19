@@ -17,7 +17,7 @@ namespace BankingSystem
             AccountNumber = GenerateAccountNumber();
         }
 
-        public void Deposit(decimal amount)
+        public virtual void Deposit(decimal amount)
         {
             if (amount <= 0) throw new ArgumentException("Deposit amount must be positive.");
             Balance += amount;

@@ -42,6 +42,29 @@ namespace BankingSystem
             existingAccounts.Add(newAccount);
         }
 
+        public void Transfer(Account fromAccount, Account toAccount, decimal amount)
+        {
+            if (fromAccount == null || toAccount == null)
+            {
+                throw new ArgumentNullException("Accounts cannot be null.");
+            }
+
+            // This will throw an exception if funds are insufficient, stopping the transaction.
+            fromAccount.Withdraw(amount);
+
+            try
+            {
+                // Only if the withdrawal is successful, we attempt the deposit.
+                toAccount.Deposit(amount);
+            }
+            catch (Exception)
+            {
+                // If the deposit fails, we roll back the successful withdrawal.
+                fromAccount.Deposit(amount);
+                throw new InvalidOperationException("Transfer failed. The transaction has been rolled back.");
+            }
+        }
+
         public List<Account>? GetAccounts(User? user)
         {
             if (user != null)

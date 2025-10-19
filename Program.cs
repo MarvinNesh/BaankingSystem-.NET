@@ -52,7 +52,7 @@ public class Program
     private static void ShowMainMenu()
     {
         Console.WriteLine($"\nWelcome, {currentUser?.Name}!");
-        Console.WriteLine("1. Open Account\n2. Perform Transaction\n3. Check All Balances\n4. Logout");
+        Console.WriteLine("1. Open Account\n2. Perform Transaction\n3. Transfer\n4. Check All Balances\n5. Logout");
         Console.Write("Choose an option: ");
         var choice = Console.ReadLine();
 
@@ -65,9 +65,12 @@ public class Program
                 PerformTransactions();
                 break;
             case "3":
-                CheckAllBalances();
+                Transfer();
                 break;
             case "4":
+                CheckAllBalances();
+                break;
+            case "5":
                 currentUser = null;
                 Console.WriteLine("Logged out successfully.");
                 break;
@@ -229,7 +232,7 @@ public class Program
         string transactionPrompt = "\nChoose transaction:\n1. Deposit\n2. Withdraw";
         if (selectedAccount is CreditAccount)
         {
-            transactionPrompt = "\nChoose transaction:\n1. Make Payment\n2. Withdraw";
+            transactionPrompt = "\nChoose transaction:\n1. Make Payment\n2. Spend";
         }
         Console.WriteLine(transactionPrompt);
         Console.Write("Choose an option: ");
@@ -282,6 +285,51 @@ public class Program
             default:
                 Console.WriteLine("Invalid transaction type.");
                 break;
+        }
+    }
+
+    private static void Transfer()
+    {
+        if (currentUser == null) return;
+
+        Console.WriteLine("\n--- Transfer Funds ---");
+
+        Console.WriteLine("\nSelect account to transfer from:");
+        var fromAccount = SelectAccount();
+        if (fromAccount == null)
+        {
+            return;
+        }
+
+        Console.WriteLine("\nSelect account to transfer to:");
+        var toAccount = SelectAccount();
+        if (toAccount == null)
+        {
+            return;
+        }
+
+        if (fromAccount.AccountNumber == toAccount.AccountNumber)
+        {
+            Console.WriteLine("Source and destination accounts cannot be the same.");
+            return;
+        }
+
+        Console.Write("Enter amount to transfer: ");
+        if (decimal.TryParse(Console.ReadLine(), out decimal amount))
+        {
+            try
+            {
+                bank?.Transfer(fromAccount, toAccount, amount);
+                Console.WriteLine("Transfer successful!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid amount.");
         }
     }
 
