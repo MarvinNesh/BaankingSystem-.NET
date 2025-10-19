@@ -77,5 +77,21 @@ namespace BankingSystem.Tests
             Assert.NotEmpty(account.AccountNumber);
             Assert.Contains("-", account.AccountNumber);
         }
+        [Fact]
+    public void SavingsAccount_WithdrawalBelowMinBalance_WarnsButWithdraws()
+    {
+        
+        var account = new SavingsAccount("Nesh Marvin", 50m);  
+        var stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
+
+        
+        account.Withdraw(20m);
+
+        
+        var output = stringWriter.ToString();
+        Assert.Contains("Warning: Balance below R100", output);
+        Assert.Equal(30m, account.Balance);  
+    }
     }
 }
