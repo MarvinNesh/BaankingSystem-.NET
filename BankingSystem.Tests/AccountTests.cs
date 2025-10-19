@@ -28,5 +28,16 @@ namespace BankingSystem.Tests
             
             Assert.Equal(150m, account.Balance);
         }
+
+        [Fact]
+        public void Deposit_WithInvalidAmount_ThrowsArgumentException()
+        {
+            
+            var account = new TestAccount("Nesh Marvin", 100m);
+
+            
+            var ex = Assert.Throws<ArgumentException>(() => account.Deposit(-50m));
+            Assert.Contains("Deposit amount must be positive", ex.Message);
+        }
     }
 }
