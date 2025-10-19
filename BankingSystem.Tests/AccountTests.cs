@@ -93,5 +93,29 @@ namespace BankingSystem.Tests
         Assert.Contains("Warning: Balance below R100", output);
         Assert.Equal(30m, account.Balance);  
     }
+        [Fact]
+    public void SavingsAccount_Constructor_InheritsBaseProperties()
+    {
+        
+        var account = new SavingsAccount("Nesh Marvin", 100m);
+
+        
+        Assert.Equal("Nesh Marvin", account.OwnerName);
+        Assert.Equal(100m, account.Balance);
+        Assert.NotNull(account.AccountNumber);
+    }
+
+    [Fact]
+    public void SavingsAccount_CalculateInterest_ReturnsThreePercent()
+    {
+        
+        var account = new SavingsAccount("Nesh Marvin", 1000m);
+
+        
+        var interest = account.CalculateInterest();
+
+        
+        Assert.Equal(30m, interest);  // 1000 * 0.03 = 30
+    }
     }
 }
