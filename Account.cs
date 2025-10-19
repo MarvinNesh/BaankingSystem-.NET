@@ -41,7 +41,7 @@ namespace BankingSystem
 
         private static string GenerateAccountNumber()
         {
-            Random rand = new Random();
+            var rand = new Random();
             return $"{rand.Next(1000, 9999)}-{rand.Next(100000, 999999)}";
         }
     }
