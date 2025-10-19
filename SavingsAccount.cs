@@ -26,7 +26,7 @@ namespace BankingSystem
         {
             decimal interest = CalculateInterest();
             Deposit(interest);
-            Console.WriteLine($"Applied interest: ${interest:F2}");
+            Console.WriteLine($"Applied interest: R{interest:F2}");
         }
     }
 }
