@@ -32,7 +32,7 @@ namespace BankingSystem
             Console.WriteLine($"Withdrew R{amount:F2}. New balance: R{Balance:F2}");
         }
 
-        public void CheckBalance()
+        public virtual void CheckBalance()
         {
             Console.WriteLine($"Balance for {OwnerName}: R{Balance:F2}");
         }

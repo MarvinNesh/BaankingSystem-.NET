@@ -20,6 +20,11 @@ namespace BankingSystem
             base.Withdraw(amount);
         }
 
+        public override void CheckBalance()
+        {
+            Console.WriteLine($"Checking Account Balance: R{Balance:F2}");
+        }
+
         public override decimal CalculateInterest()
         {
             return 0m; // No interest on checking

@@ -17,6 +17,11 @@ namespace BankingSystem
             base.Withdraw(amount);
         }
 
+        public override void CheckBalance()
+        {
+            Console.WriteLine($"Savings Account Balance: R{Balance:F2}");
+        }
+
         public override decimal CalculateInterest()
         {
             return Balance * InterestRate; // Simple annual interest
