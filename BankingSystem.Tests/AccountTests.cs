@@ -39,17 +39,18 @@ namespace BankingSystem.Tests
             var ex = Assert.Throws<ArgumentException>(() => account.Deposit(-50m));
             Assert.Contains("Deposit amount must be positive", ex.Message);
         }
+
         [Fact]
         public void Withdraw_WithValidAmount_DecreasesBalance()
         {
+            
+            var account = new TestAccount("Nesh Marvin", 100m);
 
-        var account = new TestAccount("Nesh Marvin", 100m);
+            
+            account.Withdraw(50m);
 
-
-        account.Withdraw(50m);
-
-
-        Assert.Equal(50m, account.Balance);
+        
+            Assert.Equal(50m, account.Balance);
         }
     }
 }
