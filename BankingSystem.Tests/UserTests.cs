@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using BankingSystem;
 
 namespace BankingSystem.Tests
@@ -8,6 +8,7 @@ namespace BankingSystem.Tests
         [Fact]
         public void Constructor_WithValidData_SetsProperties()
         {
+        User.ClearRegistry(); // Clear for isolation
             var user = new User("Nesh Marvin", "marvin@test.com");
 
             Assert.Equal("Nesh Marvin", user.Name);
@@ -31,8 +32,9 @@ namespace BankingSystem.Tests
         [Fact]
         public void SetPassword_WithValidData_HashesPassword()
         {
+           User.ClearRegistry();  // Clear for isolation
             var user = new User("Nesh Marvin", "nesh@test.com");
-            var expectedHash = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("secret123bankSalt"));
+            var expectedHash = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("secret123" + "bankSalt"));
 
             user.SetPassword("secret123");
 
@@ -43,6 +45,7 @@ namespace BankingSystem.Tests
         [Fact]
         public void SetPassword_WithEmptyData_ThrowsArgumentException()
         {
+            User.ClearRegistry();  // Clear for isolation
             var user = new User("Nesh Marvin", "nesh@test.com");
 
             var ex = Assert.Throws<ArgumentException>(() => user.SetPassword(""));
