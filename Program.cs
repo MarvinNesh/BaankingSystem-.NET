@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BankingSystem;
 
 public class Program
@@ -148,8 +150,11 @@ public class Program
                     Console.WriteLine("Invalid account type.");
                     return;
             }
-            bank?.OpenAccount(currentUser, account);
-            Console.WriteLine("Account opened successfully!");
+            if (bank != null && account != null)
+            {
+                bank.OpenAccount(currentUser, account);
+                Console.WriteLine("Account opened successfully!");
+            }
         }
         else
         {
@@ -157,12 +162,42 @@ public class Program
         }
     }
 
+    private static Account? SelectAccount()
+    {
+        var accounts = bank?.GetAccounts(currentUser);
+        if (accounts == null || !accounts.Any())
+        {
+            Console.WriteLine("No accounts found. Please open one first.");
+            return null;
+        }
+
+        if (accounts.Count == 1)
+        {
+            return accounts[0];
+        }
+
+        Console.WriteLine("Select an account:");
+        for (int i = 0; i < accounts.Count; i++)
+        {
+            var accountType = accounts[i] is SavingsAccount ? "Savings" : "Checking";
+            Console.WriteLine($"{i + 1}. {accountType} Account - Balance: R{accounts[i].Balance:F2}");
+        }
+
+        Console.Write("Choose an account: ");
+        if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= accounts.Count)
+        {
+            return accounts[choice - 1];
+        }
+        
+        Console.WriteLine("Invalid selection.");
+        return null;
+    }
+
     private static void Deposit()
     {
-        var account = bank?.GetAccount(currentUser);
+        var account = SelectAccount();
         if (account == null)
         {
-            Console.WriteLine("No account found. Please open one first.");
             return;
         }
 
@@ -186,10 +221,9 @@ public class Program
 
     private static void Withdraw()
     {
-        var account = bank?.GetAccount(currentUser);
+        var account = SelectAccount();
         if (account == null)
         {
-            Console.WriteLine("No account found. Please open one first.");
             return;
         }
 
@@ -213,14 +247,19 @@ public class Program
 
     private static void CheckBalance()
     {
-        var account = bank?.GetAccount(currentUser);
-        if (account != null)
+        var accounts = bank?.GetAccounts(currentUser);
+        if (accounts != null && accounts.Any())
         {
-            account.CheckBalance();
+            Console.WriteLine("\n--- Account Balances ---");
+            foreach (var acc in accounts)
+            {
+                acc.CheckBalance();
+            }
+            Console.WriteLine("------------------------");
         }
         else
         {
-            Console.WriteLine("No account found.");
+            Console.WriteLine("No accounts found.");
         }
     }
 }
