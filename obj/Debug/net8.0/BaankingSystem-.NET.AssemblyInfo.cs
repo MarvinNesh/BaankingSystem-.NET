@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BaankingSystem-.NET")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8dbc3ae93fcdf9df8306f75e128eb1bb9af3512")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d428a400ea6be33ca22a8557270a1245f4eee5a")]
 [assembly: System.Reflection.AssemblyProductAttribute("BaankingSystem-.NET")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BaankingSystem-.NET")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

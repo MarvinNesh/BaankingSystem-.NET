@@ -133,5 +133,6 @@ namespace BankingSystem.Tests
         Assert.Contains("Applied interest: R30.00", output);  // 1000 * 0.03 = 30
         Assert.Equal(1030m, account.Balance);  // Balance + interest
     }
+    
     }
 }

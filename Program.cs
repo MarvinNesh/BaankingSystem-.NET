@@ -191,60 +191,37 @@ public class Program
         }
 
         Console.Write("Choose an account: ");
-        if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= accounts.Count)
+        if (int.TryParse(Console.ReadLine(), out int accountIndex) && accountIndex > 0 && accountIndex <= accounts.Count)
         {
-            return accounts[choice - 1];
-        }
-        
-        Console.WriteLine("Invalid selection.");
-        return null;
-    }
+            var selectedAccount = accounts[accountIndex - 1];
+            Console.WriteLine($"Selected Account: {selectedAccount.AccountNumber}");
 
-    private static void Deposit()
-    {
-        var account = SelectAccount();
-        if (account == null)
-        {
-            return;
-        }
+            string transactionPrompt = "Choose transaction: (1) Deposit (2) Withdraw (3) Check Balance";
+            if (selectedAccount is CreditAccount)
+            {
+                transactionPrompt = "Choose transaction: (1) Make Payment (2) Withdraw (3) Check Balance";
+            }
+            Console.WriteLine(transactionPrompt);
 
-        Console.Write("Enter amount to deposit: ");
-        if (decimal.TryParse(Console.ReadLine(), out var amount))
-        {
-            try
+            switch (Console.ReadLine())
             {
-                account.Deposit(amount);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Invalid amount.");
-        }
-    }
-
-    private static void Withdraw()
-    {
-        var account = SelectAccount();
-        if (account == null)
-        {
-            return;
-        }
-
-        Console.Write("Enter amount to withdraw: ");
-        if (decimal.TryParse(Console.ReadLine(), out var amount))
-        {
-            try
-            {
-                account.Withdraw(amount);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                case "1":
+                    Console.Write("Enter amount: ");
+                    if (decimal.TryParse(Console.ReadLine(), out decimal depositAmount))
+                    {
+                        if (selectedAccount is CreditAccount creditAccount)
+                        {
+                            creditAccount.MakePayment(depositAmount);
+                        }
+                        else
+                        {
+                            selectedAccount.Deposit(depositAmount);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid deposit amount.");
+                    }
         }
         else
         {
