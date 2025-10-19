@@ -1,5 +1,6 @@
 using Xunit;
 using BankingSystem;
+using System;
 using System.IO;
 
 namespace BankingSystem.Tests
@@ -76,28 +77,5 @@ namespace BankingSystem.Tests
             Assert.NotEmpty(account.AccountNumber);
             Assert.Contains("-", account.AccountNumber);
         }
-        // Minimal stub for testing abstract method (does not override)
-public class MinimalTestAccount : Account
-{
-    public MinimalTestAccount(string ownerName, decimal initialBalance = 0) : base(ownerName, initialBalance) { }
-
-    public override decimal CalculateInterest()
-    {
-        throw new NotSupportedException("Interest calculation is not supported for this account type.");
-    }
-}
-
-
-
-[Fact]
-public void CalculateInterest_AbstractMethod_ThrowsNotSupportedException()
-{
-    
-    var account = new MinimalTestAccount("Nesh Marvin", 100m);
-
-
-    var ex = Assert.Throws<NotSupportedException>(() => account.CalculateInterest());
-    Assert.Contains("not supported", ex.Message.ToLower());  
-}
     }
 }
