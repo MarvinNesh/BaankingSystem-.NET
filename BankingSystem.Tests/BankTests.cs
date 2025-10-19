@@ -1,6 +1,6 @@
 using Xunit;
 using BankingSystem;
-using System.Linq;
+using System;
 
 namespace BankingSystem.Tests
 {
@@ -29,6 +29,18 @@ namespace BankingSystem.Tests
 
             Assert.Equal("Nesh Marvin", user.Name);
             Assert.Equal("nesh@test.com", user.Email);
+        }
+
+        [Fact]
+        public void Login_WithInvalidData_ThrowsInvalidOperationException()
+        {
+            User.ClearRegistry();  // Clear for isolation
+            var bank = new Bank();
+            bank.RegisterUser("Nesh Marvin", "nesh@test.com", "secret123");
+
+            
+            var ex = Assert.Throws<InvalidOperationException>(() => bank.Login("nesh@test.com", "wrongpass"));
+            Assert.Equal("Invalid credentials.", ex.Message);
         }
     }
 }
