@@ -117,5 +117,21 @@ namespace BankingSystem.Tests
         
         Assert.Equal(30m, interest);  // 1000 * 0.03 = 30
     }
+        [Fact]
+    public void SavingsAccount_ApplyInterest_IncreasesBalance()
+    {
+        
+        var account = new SavingsAccount("Nesh Marvin", 1000m);
+        var stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
+
+        
+        account.ApplyInterest();
+
+        
+        var output = stringWriter.ToString();
+        Assert.Contains("Applied interest: R30.00", output);  // 1000 * 0.03 = 30
+        Assert.Equal(1030m, account.Balance);  // Balance + interest
+    }
     }
 }
