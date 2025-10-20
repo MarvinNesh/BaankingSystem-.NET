@@ -4,12 +4,18 @@ namespace BankingSystem
 {
     public abstract class Account
     {
+        public int Id { get; set; }
         public string AccountNumber { get; protected set; }
         public string OwnerName { get; protected set; }
         public decimal Balance { get; protected set; }
         public DateTime CreatedDate { get; protected set; }
 
-        protected Account(string ownerName, decimal initialBalance = 0)
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
+
+        protected Account() { } // For EF Core
+
+        public Account(string ownerName, decimal initialBalance)
         {
             OwnerName = ownerName;
             Balance = initialBalance;
@@ -37,7 +43,10 @@ namespace BankingSystem
             Console.WriteLine($"Balance for {OwnerName}: R{Balance:F2}");
         }
 
-        public abstract decimal CalculateInterest(); // To override in derived classes
+        public virtual decimal CalculateInterest()
+        {
+            return 0;
+        }
 
         private static string GenerateAccountNumber()
         {
