@@ -1,2 +1,39 @@
+# Dependencies
+/packages/
+
+# Visual Studio generated files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
 [Bb]in/
 [Oo]bj/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider
+.idea/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# Dotnet local tools
+.config/
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+Data/
+banking.db
+banking.db-shm
+banking.db-wal
+
+# Solution file
+BaankingSystem-.NET.sln
