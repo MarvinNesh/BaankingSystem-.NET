@@ -4,9 +4,10 @@ namespace BankingSystem
 {
     public class CreditAccount : Account
     {
-        public decimal CreditLimit { get; }
+        public decimal CreditLimit { get; private set; }
         private const decimal InterestRate = 0.20m; // 20% annual interest rate for outstanding balance
 
+        public CreditAccount() { } // For EF Core
         public CreditAccount(string ownerName, decimal creditLimit, decimal initialPayment = 0) : base(ownerName, -initialPayment)
         {
             if (creditLimit <= 0)

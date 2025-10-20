@@ -6,6 +6,7 @@ namespace BankingSystem
     {
         private const decimal InterestRate = 0.03m; // 3% annual
 
+        public SavingsAccount() { } // For EF Core
         public SavingsAccount(string ownerName, decimal initialBalance = 0) : base(ownerName, initialBalance) { }
 
         public override void Withdraw(decimal amount)

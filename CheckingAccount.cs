@@ -6,6 +6,7 @@ namespace BankingSystem
     {
         private const decimal OverdraftFee = 35.00m;
 
+        public CheckingAccount() { } // For EF Core
         public CheckingAccount(string ownerName, decimal initialBalance = 0) : base(ownerName, initialBalance) { }
 
         public override void Withdraw(decimal amount)

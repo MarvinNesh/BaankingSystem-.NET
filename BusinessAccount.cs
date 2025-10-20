@@ -5,8 +5,9 @@ namespace BankingSystem
     public class BusinessAccount : Account
     {
         private const decimal TransactionFee = 2.50m; // A flat fee for each withdrawal
-        public decimal OverdraftLimit { get; }
+        public decimal OverdraftLimit { get; private set; }
 
+        public BusinessAccount() { } // For EF Core
         public BusinessAccount(string ownerName, decimal initialBalance, decimal overdraftLimit) : base(ownerName, initialBalance)
         {
             if (overdraftLimit < 0)
