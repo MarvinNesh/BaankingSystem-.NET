@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BankingSystem;
+using BankingSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
@@ -10,7 +12,12 @@ public class Program
 
     public static void Main(string[] args)
     {
-        bank = new Bank();
+        var optionsBuilder = new DbContextOptionsBuilder<BankingContext>();
+        optionsBuilder.UseSqlite("Data Source=banking.db");
+        using var context = new BankingContext(optionsBuilder.Options);
+        context.Database.Migrate(); // Apply migrations
+
+        bank = new Bank(context);
 
         Console.WriteLine("Welcome to the Marvin Bank");
 
