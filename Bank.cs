@@ -84,5 +84,40 @@ namespace BankingSystem
 
             _context.SaveChanges();
         }
+
+        public void Transfer(Account fromAccount, string toAccountNumber, decimal amount)
+        {
+            if (fromAccount == null)
+            {
+                throw new ArgumentNullException(nameof(fromAccount), "Source account cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(toAccountNumber))
+            {
+                throw new ArgumentException("Destination account number cannot be empty.", nameof(toAccountNumber));
+            }
+
+            var from = _context.Accounts.Find(fromAccount.Id);
+            if (from == null)
+            {
+                throw new InvalidOperationException("Source account not found.");
+            }
+
+            if (from.AccountNumber == toAccountNumber)
+            {
+                throw new InvalidOperationException("Source and destination accounts cannot be the same.");
+            }
+
+            var to = _context.Accounts.FirstOrDefault(a => a.AccountNumber == toAccountNumber);
+            if (to == null)
+            {
+                throw new InvalidOperationException("Destination account not found.");
+            }
+
+            from.Withdraw(amount);
+            to.Deposit(amount);
+
+            _context.SaveChanges();
+        }
     }
 }

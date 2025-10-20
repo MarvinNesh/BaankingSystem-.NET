@@ -321,14 +321,15 @@ public class Program
             return;
         }
 
-        Console.WriteLine("\nSelect account to transfer to:");
-        var toAccount = SelectAccount();
-        if (toAccount == null)
+        Console.Write("Enter recipient's account number: ");
+        var toAccountNumber = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(toAccountNumber))
         {
+            Console.WriteLine("Account number cannot be empty.");
             return;
         }
 
-        if (fromAccount.AccountNumber == toAccount.AccountNumber)
+        if (fromAccount.AccountNumber == toAccountNumber)
         {
             Console.WriteLine("Source and destination accounts cannot be the same.");
             return;
@@ -339,7 +340,7 @@ public class Program
         {
             try
             {
-                bank?.Transfer(fromAccount, toAccount, amount);
+                bank?.Transfer(fromAccount, toAccountNumber, amount);
                 Console.WriteLine("Transfer successful!");
             }
             catch (Exception ex)
