@@ -1,22 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BankingSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystem
 {
     public class Bank
     {
-        private readonly Dictionary<string, List<Account>> _accounts = new Dictionary<string, List<Account>>();
+        private readonly BankingContext _context;
+
+        public Bank(BankingContext context)
+        {
+            _context = context;
+        }
 
         public void RegisterUser(string name, string email, string password)
         {
-            User.Register(name, email, password);
+            if (_context.Users.Any(u => u.Email == email))
+            {
+                throw new InvalidOperationException("User with this email already exists.");
+            }
+
+            var user = new User(name, email);
+            user.SetPassword(password);
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
         public User? Login(string email, string password)
         {
-            var user = User.FindByCredentials(email, password);
-            if (user == null)
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null || !user.VerifyPassword(password))
             {
                 throw new InvalidOperationException("Invalid credentials.");
             }
@@ -27,19 +43,25 @@ namespace BankingSystem
         {
             if (user == null) return;
 
-            if (!_accounts.ContainsKey(user.Email))
-            {
-                _accounts[user.Email] = new List<Account>();
-            }
-
-            var existingAccounts = _accounts[user.Email];
+            var existingAccounts = _context.Accounts.Where(a => a.UserId == user.Id).ToList();
             if (existingAccounts.Any(acc => acc.GetType() == newAccount.GetType()))
             {
                 string accountTypeName = newAccount.GetType().Name.Replace("Account", "");
                 throw new InvalidOperationException($"You already have a {accountTypeName} account.");
             }
             
-            existingAccounts.Add(newAccount);
+            newAccount.UserId = user.Id;
+            _context.Accounts.Add(newAccount);
+            _context.SaveChanges();
+        }
+
+        public List<Account> GetAccounts(User? user)
+        {
+            if (user == null)
+            {
+                return new List<Account>();
+            }
+            return _context.Accounts.Where(a => a.UserId == user.Id).ToList();
         }
 
         public void Transfer(Account fromAccount, Account toAccount, decimal amount)
@@ -49,29 +71,18 @@ namespace BankingSystem
                 throw new ArgumentNullException("Accounts cannot be null.");
             }
 
-            // This will throw an exception if funds are insufficient, stopping the transaction.
-            fromAccount.Withdraw(amount);
+            var from = _context.Accounts.Find(fromAccount.Id);
+            var to = _context.Accounts.Find(toAccount.Id);
 
-            try
+            if (from == null || to == null)
             {
-                // Only if the withdrawal is successful, we attempt the deposit.
-                toAccount.Deposit(amount);
+                throw new InvalidOperationException("One or both accounts not found.");
             }
-            catch (Exception)
-            {
-                // If the deposit fails, we roll back the successful withdrawal.
-                fromAccount.Deposit(amount);
-                throw new InvalidOperationException("Transfer failed. The transaction has been rolled back.");
-            }
-        }
 
-        public List<Account>? GetAccounts(User? user)
-        {
-            if (user != null)
-            {
-                return _accounts.GetValueOrDefault(user.Email);
-            }
-            return null;
+            from.Withdraw(amount);
+            to.Deposit(amount);
+
+            _context.SaveChanges();
         }
     }
 }
