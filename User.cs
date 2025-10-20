@@ -9,11 +9,14 @@ namespace BankingSystem
 {
     public class User
     {
-        private static List<User> existingUsers = new List<User>();
-
+        public int Id { get; set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
-        public string? Password { get; private set; }
+        public byte[]? PasswordHash { get; private set; }
+        public byte[]? PasswordSalt { get; private set; }
+        public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+
+        private User() { }
 
         public User(string name, string email)
         {
@@ -37,39 +40,24 @@ namespace BankingSystem
             {
                 throw new ArgumentException("Password cannot be empty.", nameof(newPassword));
             }
-            Password = SimpleHash.Compute(newPassword);
+            using (var hmac = new HMACSHA512())
+            {
+                PasswordSalt = hmac.Key;
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(newPassword));
+            }
         }
 
         public bool VerifyPassword(string password)
         {
-            return Password == SimpleHash.Compute(password);
-        }
-
-        public static void Register(string name, string email, string password)
-        {
-            if (existingUsers.Any(u => u.Email == email))
+            if (PasswordHash == null || PasswordSalt == null)
             {
-                throw new InvalidOperationException("User with this email already exists.");
+                return false;
             }
-
-            var user = new User(name, email);
-            user.SetPassword(password);
-            existingUsers.Add(user);
-        }
-
-        public static User? FindByCredentials(string email, string password)
-        {
-            var user = existingUsers.FirstOrDefault(u => u.Email == email);
-            if (user != null && user.VerifyPassword(password))
+            using (var hmac = new HMACSHA512(PasswordSalt))
             {
-                return user;
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(PasswordHash);
             }
-            return null;
-        }
-
-        public static void ClearRegistry()
-        {
-            existingUsers.Clear();
         }
     }
 }
